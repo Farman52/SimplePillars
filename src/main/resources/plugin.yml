@@ -1,0 +1,23 @@
+name: SimplePillars
+version: '1.0'
+main: me.farmans.simplePillars.SimplePillars
+api-version: '1.20'
+authors: [Farmans]
+
+commands:
+  pstart:
+    description: startuje
+    usage: /pstart
+    permission: op
+  pstop:
+    description: stopne
+    usage: /pstop
+    permission: op
+  pradius:
+    description: polomer
+    usage: /pradius <radius>
+    permission: op
+  pheight:
+    description: vyška
+    usage: /pheight <height>
+    permission: op
