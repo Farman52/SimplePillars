@@ -54,11 +54,6 @@ public class BlockEvent implements Listener {
         }
     }
 
-    @EventHandler
-    public void onBlockForm(BlockFormEvent event) {
-        System.out.println("TESTIIIK");
-    }
-
     // Rostliny, plodiny, sugar cane, kaktus apod.
     @EventHandler
     public void onBlockGrow(BlockGrowEvent event) {
