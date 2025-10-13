@@ -2,7 +2,7 @@ package me.farmans.simplePillars.commands;
 
 import me.farmans.simplePillars.SimplePillars;
 import me.farmans.simplePillars.events.BlockEvent;
-import me.farmans.simplePillars.events.DamageEvent;
+import me.farmans.simplePillars.events.DeathEvent;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -50,13 +50,16 @@ public class StopCommand implements CommandExecutor {
         }
         System.out.println("Hráči portnuti na world spawn");
 
+        ((Player) commandSender).getWorld().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, false);
+        ((Player) commandSender).getWorld().setGameRule(GameRule.RANDOM_TICK_SPEED, 3);
+
         StartCommand.playingPlayers.clear();
-        DamageEvent.kills.clear();
+        DeathEvent.kills.clear();
         StartCommand.scoreboards.clear();
         BlockEvent.blocks.clear();
         System.out.println("Data resetovány");
 
-        plugin.getServer().getBossBar(new NamespacedKey(plugin, "rilypillartimer")).removeAll();
+        plugin.getServer().getBossBar(new NamespacedKey(plugin, "simplepillars")).removeAll();
 
         return true;
     }

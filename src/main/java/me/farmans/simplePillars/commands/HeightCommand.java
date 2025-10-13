@@ -4,9 +4,14 @@ import me.farmans.simplePillars.SimplePillars;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class HeightCommand implements CommandExecutor {
+import java.util.Collections;
+import java.util.List;
+
+public class HeightCommand implements CommandExecutor, TabExecutor {
     SimplePillars plugin;
 
     public HeightCommand(SimplePillars plugin) {this.plugin = plugin;}
@@ -25,5 +30,10 @@ public class HeightCommand implements CommandExecutor {
         commandSender.sendMessage(String.format("Výška byla nastavena na %s", args[0]));
 
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        return Collections.singletonList(plugin.getConfig().getString("Height"));
     }
 }

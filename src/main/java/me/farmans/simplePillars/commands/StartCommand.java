@@ -2,6 +2,8 @@ package me.farmans.simplePillars.commands;
 
 import me.farmans.simplePillars.SimplePillars;
 import me.farmans.simplePillars.events.BlockEvent;
+import me.farmans.simplePillars.utils.ChatUtil;
+import me.farmans.simplePillars.utils.RunnableUtil;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
@@ -12,7 +14,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -21,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+
+import static me.farmans.simplePillars.utils.ChatUtil.gradient;
 
 public class StartCommand implements CommandExecutor, TabExecutor {
     SimplePillars plugin;
@@ -54,12 +57,9 @@ public class StartCommand implements CommandExecutor, TabExecutor {
         plugin.getConfig().set("Center", String.format("%s %s", x, z));
         plugin.saveConfig();
 
-        Object[] materials = Arrays.stream(Material.values()).filter(p -> p.isItem()).toArray();
         Object[] players = plugin.getServer().getOnlinePlayers().toArray();
 
-        BossBar bossbar = plugin.getServer().createBossBar(new NamespacedKey(plugin, "rilypillartimer"), "TIMER", BarColor.GREEN, BarStyle.SOLID);
-
-
+        BossBar bossbar = plugin.getServer().createBossBar(new NamespacedKey(plugin, "simplepillars"), ChatColor.BOLD + "=== TIMER ===", BarColor.PURPLE, BarStyle.SOLID);
 
         int radius = plugin.getConfig().getInt("Radius");
         int height = plugin.getConfig().getInt("Height");
@@ -81,7 +81,11 @@ public class StartCommand implements CommandExecutor, TabExecutor {
             bossbar.addPlayer(player);
 
             Scoreboard scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
-            Objective obj = scoreboard.registerNewObjective("rilypillar", Criteria.DUMMY, ChatColor.BOLD + "" + ChatColor.AQUA + "SirYakari Pillars");
+            String title = gradient(plugin.getConfig().getString("Title"), true,
+                    plugin.getConfig().getString("TitleHex").split(" ")
+            );
+            if (title.length() > 128) title = plugin.getConfig().getString("ScoreboardTitle");
+            Objective obj = scoreboard.registerNewObjective("simplepillars", Criteria.DUMMY, title);
             obj.setDisplaySlot(DisplaySlot.SIDEBAR);
             obj.getScore(ChatColor.BOLD + "Name: " + ChatColor.RESET + player.getName()).setScore(2);
             obj.getScore(ChatColor.BOLD + "Alive: " + ChatColor.RESET + plugin.getServer().getOnlinePlayers().size()).setScore(1);
@@ -94,33 +98,12 @@ public class StartCommand implements CommandExecutor, TabExecutor {
         }
         commandSender.sendMessage("Hráči teleportnuti na místa");
 
-        final double INTERVAL = plugin.getConfig().getDouble("Interval");
-        int schedule = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            private int ticks = 0;
+        sender.getWorld().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+        sender.getWorld().setGameRule(GameRule.RANDOM_TICK_SPEED, 0);
 
-            @Override
-            public void run() {
-                ticks++;
-                bossbar.setProgress(INTERVAL / 100 * ticks);
-                if (ticks == 100 / INTERVAL) {
-                    for (int i = 0; i < playingPlayers.size(); i++) {
-                        int num = new Random().nextInt(materials.length);
+        RunnableUtil.startGame(plugin);
 
-                        Player player = Bukkit.getPlayer(playingPlayers.get(i));
-
-                        player.getInventory().addItem(new ItemStack((Material) materials[num]));
-                    }
-                    ticks = 0;
-                }
-            }
-        }, 100/*WAIT*/, (long) INTERVAL);
-
-        plugin.getConfig().set("Schedule", schedule);
-        plugin.saveConfig();
-
-        for (Player player : plugin.getServer().getOnlinePlayers()) {
-            player.sendMessage("Hra započala");
-        }
+        ChatUtil.sendAllMessage(plugin, "Hra započala!", true);
 
         return true;
     }

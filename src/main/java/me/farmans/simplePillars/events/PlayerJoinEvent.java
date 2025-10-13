@@ -18,7 +18,7 @@ public class PlayerJoinEvent implements Listener {
     @EventHandler
     public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event) {
         if (plugin.getConfig().getInt("Schedule") == -1) {
-            BossBar bossbar = plugin.getServer().getBossBar(new NamespacedKey(plugin, "rilypillartimer"));
+            BossBar bossbar = plugin.getServer().getBossBar(new NamespacedKey(plugin, "simplepillars"));
             if (bossbar != null) bossbar.removePlayer(event.getPlayer());
         } else {
             if (StartCommand.scoreboards.containsKey(event.getPlayer().getUniqueId())) {

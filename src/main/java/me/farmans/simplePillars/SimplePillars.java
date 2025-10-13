@@ -5,7 +5,7 @@ import me.farmans.simplePillars.commands.RadiusCommand;
 import me.farmans.simplePillars.commands.StartCommand;
 import me.farmans.simplePillars.commands.StopCommand;
 import me.farmans.simplePillars.events.BlockEvent;
-import me.farmans.simplePillars.events.DamageEvent;
+import me.farmans.simplePillars.events.DeathEvent;
 import me.farmans.simplePillars.events.PlayerJoinEvent;
 import me.farmans.simplePillars.events.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,10 +20,13 @@ public final class SimplePillars extends JavaPlugin {
 
         File file = new File(getDataFolder() + File.separator + "config.yml");
         if (!file.exists()) {
-            getConfig().addDefault("Radius", 10);
+            getConfig().addDefault("Radius", 200);
+            getConfig().addDefault("Height", 20);
             getConfig().addDefault("Schedule", -1);
             getConfig().addDefault("Interval", 2);
             getConfig().addDefault("Center", "0 0");
+            getConfig().addDefault("Title", "SirYakari Pillars");
+            getConfig().addDefault("TitleHex", "\\#00C3FF \\#2EE6E6 \\#FF66C4 \\#FF42B6");
             getConfig().options().copyDefaults(true);
             saveConfig();
         } else {
@@ -38,7 +41,7 @@ public final class SimplePillars extends JavaPlugin {
         getCommand("pheight").setExecutor(new HeightCommand(this));
 
         getServer().getPluginManager().registerEvents(new BlockEvent(this), this);
-        getServer().getPluginManager().registerEvents(new DamageEvent(this), this);
+        getServer().getPluginManager().registerEvents(new DeathEvent(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinEvent(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitEvent(this), this);
     }
