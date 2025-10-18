@@ -14,9 +14,10 @@ import java.util.Random;
 
 public class RunnableUtil {
     public static void startGame(SimplePillars plugin) {
-        Object[] materials = Arrays.stream(Material.values()).filter(p -> p.isItem()).toArray();
+        Object[] materials = Arrays.stream(Material.values()).filter(p -> p.isItem() && !p.isLegacy() && !p.isAir()).toArray();
 
         final double INTERVAL = plugin.getConfig().getDouble("Interval");
+        final double PERIOD = plugin.getConfig().getDouble("Period");
 
         BossBar bossbar = plugin.getServer().getBossBar(new NamespacedKey(plugin, "simplepillars"));
 
@@ -26,8 +27,8 @@ public class RunnableUtil {
             @Override
             public void run() {
                 ticks++;
-                bossbar.setProgress(INTERVAL / 100 * ticks);
-                if (ticks == 100 / INTERVAL) {
+                bossbar.setProgress(INTERVAL / PERIOD * ticks);
+                if (ticks == PERIOD / INTERVAL) {
                     for (int i = 0; i < StartCommand.playingPlayers.size(); i++) {
                         int num = new Random().nextInt(materials.length);
 

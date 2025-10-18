@@ -24,6 +24,7 @@ public final class SimplePillars extends JavaPlugin {
             getConfig().addDefault("Height", 20);
             getConfig().addDefault("Schedule", -1);
             getConfig().addDefault("Interval", 2);
+            getConfig().addDefault("Period", 100);
             getConfig().addDefault("Center", "0 0");
             getConfig().addDefault("Title", "SirYakari Pillars");
             getConfig().addDefault("TitleHex", "\\#00C3FF \\#2EE6E6 \\#FF66C4 \\#FF42B6");
