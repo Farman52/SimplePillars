@@ -34,11 +34,12 @@ public class StopCommand implements CommandExecutor {
         for (Location location : BlockEvent.blocks) {
             location.getBlock().setType(Material.AIR);
         }
-        commandSender.sendMessage("Aréna vyčištěna");
         for (Entity entity : ((Player)commandSender).getWorld().getEntities()) {
             if (entity instanceof Player) continue;
             entity.remove();
         }
+        commandSender.sendMessage("Aréna vyčištěna");
+
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             player.getInventory().clear();
             player.teleport(player.getWorld().getSpawnLocation());

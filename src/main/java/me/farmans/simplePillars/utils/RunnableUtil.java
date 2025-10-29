@@ -13,8 +13,17 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class RunnableUtil {
-    public static void startGame(SimplePillars plugin) {
-        Object[] materials = Arrays.stream(Material.values()).filter(p -> p.isItem() && !p.isLegacy() && !p.isAir()).toArray();
+    public static void startGame(SimplePillars plugin, Player player) {
+        Object[] materials = Arrays.stream(Material.values()).filter(p -> {
+            try {
+                return p.isItem()
+                        && !p.isLegacy()
+                        && !p.isAir()
+                        && p.isEnabledByFeature(player.getWorld());
+            } catch (Exception e) {
+                return false;
+            }
+        }).toArray();
 
         final double INTERVAL = plugin.getConfig().getDouble("Interval");
         final double PERIOD = plugin.getConfig().getDouble("Period");

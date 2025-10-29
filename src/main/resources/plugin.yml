@@ -13,9 +13,9 @@ commands:
     description: stopne
     usage: /pstop
     permission: op
-  pradius:
-    description: polomer
-    usage: /pradius <radius>
+  pdistance:
+    description: vzdalenost
+    usage: /pdistance <distance>
     permission: op
   pheight:
     description: vyška

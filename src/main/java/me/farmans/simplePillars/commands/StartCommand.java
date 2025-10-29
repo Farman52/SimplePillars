@@ -2,6 +2,7 @@ package me.farmans.simplePillars.commands;
 
 import me.farmans.simplePillars.SimplePillars;
 import me.farmans.simplePillars.events.BlockEvent;
+import me.farmans.simplePillars.events.DeathEvent;
 import me.farmans.simplePillars.utils.ChatUtil;
 import me.farmans.simplePillars.utils.RunnableUtil;
 import org.bukkit.*;
@@ -51,6 +52,16 @@ public class StartCommand implements CommandExecutor, TabExecutor {
 
         Player sender = (Player) commandSender;
 
+        playingPlayers.clear();
+        scoreboards.clear();
+        DeathEvent.kills.clear();
+        BossBar existingBossbar = plugin.getServer().getBossBar(new NamespacedKey(plugin, "simplepillars"));
+        if (existingBossbar != null) {
+            for (Player player : plugin.getServer().getOnlinePlayers()) {
+                existingBossbar.removePlayer(player);
+            }
+        }
+
         int x = args.length > 1 ? Integer.parseInt(args[0]) : (int) sender.getLocation().getX();
         int z = args.length > 1 ? Integer.parseInt(args[1]) : (int) sender.getLocation().getZ();
 
@@ -61,12 +72,12 @@ public class StartCommand implements CommandExecutor, TabExecutor {
 
         BossBar bossbar = plugin.getServer().createBossBar(new NamespacedKey(plugin, "simplepillars"), ChatColor.BOLD + "=== TIMER ===", BarColor.PURPLE, BarStyle.SOLID);
 
-        int radius = plugin.getConfig().getInt("Radius");
+        int distance = plugin.getConfig().getInt("Distance");
         int height = plugin.getConfig().getInt("Height");
         for (int i = 0; i < players.length; i++) {
             double angle = 2 * Math.PI * i / players.length;
-            int xAngle = (int) Math.round(Math.cos(angle) * radius);
-            int yAngle = (int) Math.round(Math.sin(angle) * radius);
+            int xAngle = (int) Math.round(Math.cos(angle) * distance * players.length / (2 * Math.PI));
+            int yAngle = (int) Math.round(Math.sin(angle) * distance * players.length / (2 * Math.PI)); /* radius */
 
             Player player = (Player) players[i];
             Location location = new Location(player.getWorld(), xAngle + x, height, yAngle + z);
@@ -100,8 +111,9 @@ public class StartCommand implements CommandExecutor, TabExecutor {
 
         sender.getWorld().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
         sender.getWorld().setGameRule(GameRule.RANDOM_TICK_SPEED, 0);
+        sender.getWorld().setGameRule(GameRule.MAX_ENTITY_CRAMMING, 200);
 
-        RunnableUtil.startGame(plugin);
+        RunnableUtil.startGame(plugin, sender);
 
         ChatUtil.sendAllMessage(plugin, "Hra započala!", true);
 

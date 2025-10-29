@@ -1,7 +1,7 @@
 package me.farmans.simplePillars;
 
 import me.farmans.simplePillars.commands.HeightCommand;
-import me.farmans.simplePillars.commands.RadiusCommand;
+import me.farmans.simplePillars.commands.DistanceCommand;
 import me.farmans.simplePillars.commands.StartCommand;
 import me.farmans.simplePillars.commands.StopCommand;
 import me.farmans.simplePillars.events.BlockEvent;
@@ -20,7 +20,7 @@ public final class SimplePillars extends JavaPlugin {
 
         File file = new File(getDataFolder() + File.separator + "config.yml");
         if (!file.exists()) {
-            getConfig().addDefault("Radius", 200);
+            getConfig().addDefault("Distance", 15);
             getConfig().addDefault("Height", 20);
             getConfig().addDefault("Schedule", -1);
             getConfig().addDefault("Interval", 2);
@@ -38,7 +38,7 @@ public final class SimplePillars extends JavaPlugin {
 
         getCommand("pstart").setExecutor(new StartCommand(this));
         getCommand("pstop").setExecutor(new StopCommand(this));
-        getCommand("pradius").setExecutor(new RadiusCommand(this));
+        getCommand("pdistance").setExecutor(new DistanceCommand(this));
         getCommand("pheight").setExecutor(new HeightCommand(this));
 
         getServer().getPluginManager().registerEvents(new BlockEvent(this), this);

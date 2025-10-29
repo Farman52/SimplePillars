@@ -2,6 +2,7 @@ package me.farmans.simplePillars.events;
 
 import me.farmans.simplePillars.SimplePillars;
 import me.farmans.simplePillars.commands.StartCommand;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -20,6 +21,7 @@ public class PlayerJoinEvent implements Listener {
         if (plugin.getConfig().getInt("Schedule") == -1) {
             BossBar bossbar = plugin.getServer().getBossBar(new NamespacedKey(plugin, "simplepillars"));
             if (bossbar != null) bossbar.removePlayer(event.getPlayer());
+            event.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         } else {
             if (StartCommand.scoreboards.containsKey(event.getPlayer().getUniqueId())) {
                 event.getPlayer().setScoreboard(StartCommand.scoreboards.get(event.getPlayer().getUniqueId()));
