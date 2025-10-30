@@ -27,29 +27,37 @@ public class DeathEvent implements Listener {
             Player player = event.getPlayer();
             if (StartCommand.playingPlayers.contains(player.getUniqueId())) {
                 StartCommand.playingPlayers.remove(player.getUniqueId());
-            }
 
-            player.setGameMode(GameMode.SPECTATOR);
+                player.setGameMode(GameMode.SPECTATOR);
 
-            for (Scoreboard sb : StartCommand.scoreboards.values()) {
-                deleteScoreboardLine(sb, "Alive:");
-                sb.getObjective("simplepillars").getScore(ChatColor.BOLD + "Alive: " + ChatColor.RESET + StartCommand.playingPlayers.size()).setScore(1);
-            }
+                for (Scoreboard sb : StartCommand.scoreboards.values()) {
+                    deleteScoreboardLine(sb, "Alive:");
+                    sb.getObjective("simplepillars").getScore(ChatColor.BOLD + "Alive: " + ChatColor.RESET + StartCommand.playingPlayers.size()).setScore(1);
+                }
 
-            if (StartCommand.playingPlayers.size() == 1) {
-                plugin.getServer().getScheduler().cancelTask(plugin.getConfig().getInt("Schedule"));
-                plugin.getServer().getBossBar(new NamespacedKey(plugin, "simplepillars")).removeAll();
+                if (StartCommand.playingPlayers.size() == 1) {
+                    plugin.getServer().getScheduler().cancelTask(plugin.getConfig().getInt("Schedule"));
+                    plugin.getServer().getBossBar(new NamespacedKey(plugin, "simplepillars")).removeAll();
 
-                ChatUtil.sendAllMessage(plugin, String.format("%s vyhrál!", plugin.getServer().getPlayer(StartCommand.playingPlayers.get(0)).getName()), true);
-            }
+                    plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+                        ChatUtil.sendAllMessage(
+                                plugin,
+                                String.format("%s vyhrál!", plugin.getServer().getPlayer(StartCommand.playingPlayers.get(0)).getName()),
+                                true
+                        );
+                    }, 2L);
+                }
 
-            if (player.getKiller() instanceof Player) {
-                Player killer = player.getKiller();
-                kills.put(killer.getUniqueId(), kills.containsKey(killer.getUniqueId()) ? kills.get(killer.getUniqueId()) + 1 : 1);
+                if (player.getKiller() instanceof Player) {
+                    Player killer = player.getKiller();
+                    kills.put(killer.getUniqueId(), kills.containsKey(killer.getUniqueId()) ? kills.get(killer.getUniqueId()) + 1 : 1);
 
-                Scoreboard scoreboard = StartCommand.scoreboards.get(killer.getUniqueId());
-                deleteScoreboardLine(scoreboard, "Kills:");
-                scoreboard.getObjective("simplepillars").getScore(ChatColor.BOLD + "Kills: " + ChatColor.RESET + this.kills.get(killer.getUniqueId())).setScore(0);
+                    Scoreboard scoreboard = StartCommand.scoreboards.get(killer.getUniqueId());
+                    deleteScoreboardLine(scoreboard, "Kills:");
+                    scoreboard.getObjective("simplepillars").getScore(ChatColor.BOLD + "Kills: " + ChatColor.RESET + this.kills.get(killer.getUniqueId())).setScore(0);
+                }
+            } else {
+                event.setDeathMessage(null);
             }
         }
     }
