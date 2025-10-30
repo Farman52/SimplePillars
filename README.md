@@ -3,5 +3,6 @@
 Commands:
 - /pradius \<radius>
 - /pheight \<height>
+- /pfallmax \<fallmax>
 - /pstart [x] [z]
 - /pstop
