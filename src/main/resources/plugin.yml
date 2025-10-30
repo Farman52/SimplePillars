@@ -21,3 +21,7 @@ commands:
     description: vyška
     usage: /pheight <height>
     permission: op
+  pfallmax:
+    description: určí počet bloků, při kterým mužou hráči ještě padat, než umřou
+    usage: /pfallmax <pocet bloku nez hraci umrou>
+    permission: op

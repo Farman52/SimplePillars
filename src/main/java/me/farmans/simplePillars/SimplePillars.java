@@ -1,13 +1,7 @@
 package me.farmans.simplePillars;
 
-import me.farmans.simplePillars.commands.HeightCommand;
-import me.farmans.simplePillars.commands.DistanceCommand;
-import me.farmans.simplePillars.commands.StartCommand;
-import me.farmans.simplePillars.commands.StopCommand;
-import me.farmans.simplePillars.events.BlockEvent;
-import me.farmans.simplePillars.events.DeathEvent;
-import me.farmans.simplePillars.events.PlayerJoinEvent;
-import me.farmans.simplePillars.events.PlayerQuitEvent;
+import me.farmans.simplePillars.commands.*;
+import me.farmans.simplePillars.events.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -22,6 +16,7 @@ public final class SimplePillars extends JavaPlugin {
         if (!file.exists()) {
             getConfig().addDefault("Distance", 15);
             getConfig().addDefault("Height", 20);
+            getConfig().addDefault("FallMax", 25);
             getConfig().addDefault("Schedule", -1);
             getConfig().addDefault("Interval", 2);
             getConfig().addDefault("Period", 100);
@@ -40,11 +35,13 @@ public final class SimplePillars extends JavaPlugin {
         getCommand("pstop").setExecutor(new StopCommand(this));
         getCommand("pdistance").setExecutor(new DistanceCommand(this));
         getCommand("pheight").setExecutor(new HeightCommand(this));
+        getCommand("pfallmax").setExecutor(new FallMaxCommand(this));
 
         getServer().getPluginManager().registerEvents(new BlockEvent(this), this);
         getServer().getPluginManager().registerEvents(new DeathEvent(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinEvent(this), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitEvent(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerMoveEvent(this), this);
     }
 
     @Override
